@@ -19,9 +19,9 @@ const geminiAI = new GoogleGenAI({
 // ---------------------
 // OpenRouter Setup
 // ---------------------
-const OPENROUTER_DEEPSEEK_KEY = process.env.OPENROUTER_DEEPSEEK_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const openrouterAI = new OpenRouter({
-  apiKey: OPENROUTER_DEEPSEEK_KEY
+  apiKey: OPENROUTER_API_KEY
 });
 
 // ---------------------
