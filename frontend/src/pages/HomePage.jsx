@@ -256,7 +256,7 @@ export default function HomePage() {
         </section>
 
         {/* FOOTER */}
-        <footer className="py-10 px-6 border-t border-white/10">
+        {/* <footer className="py-10 px-6 border-t border-white/10">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <img src="/ChatZee.svg" alt="ChatZee" className="h-8 w-8" />
@@ -272,7 +272,29 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-        </footer>
+        </footer> */}
+
+        {/* FOOTER */}
+<footer className="py-10 px-6 border-t border-white/10">
+  <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <div className="flex items-center gap-3">
+      <img src="/ChatZee.svg" alt="ChatZee" className="h-8 w-8" />
+      <span className="text-xl font-medium">ChatZee</span>
+    </div>
+    <div className="text-gray-400 text-center md:text-right text-base">
+      Made with <span className="text-red-500">❤️</span> by{" "}
+      <a
+        href="https://github.com/muhammad-umar-218980"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-cyan-400 hover:underline"
+      >
+        Muhammad Umar
+      </a>
+    </div>
+  </div>
+</footer>
+
       </main>
     </div>
   );
