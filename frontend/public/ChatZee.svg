@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <!-- soft background glow -->
-  <circle cx="100" cy="95" r="86" fill="#40E0D0" opacity="0.18"/>
+  <!-- soft background glow: Removed or made subtle dark -->
+  <circle cx="100" cy="95" r="86" fill="#1a202c" opacity="0.5"/>
 
-  <!-- speech bubble -->
+  <!-- speech bubble: Dark Metallic -->
   <path
     d="M100 18
        C56.4 18 21 53.4 21 97
@@ -12,22 +12,22 @@
        C75.6 172.2 87.4 176 100 176
        C143.6 176 179 140.6 179 97
        C179 53.4 143.6 18 100 18Z"
-    fill="#40E0D0"
-    stroke="#2D3748"
-    stroke-width="6"
+    fill="#2d3748"
+    stroke="#cbd5e0"
+    stroke-width="4"
     stroke-linejoin="round"
   />
 
-  <!-- face container -->
+  <!-- face container: Silver/Lighter Grey -->
   <rect
     x="56"
     y="74"
     width="88"
     height="60"
     rx="28"
-    fill="#40E0D0"
-    stroke="#2D3748"
-    stroke-width="6"
+    fill="#4a5568"
+    stroke="#a0aec0"
+    stroke-width="4"
   />
 
   <!-- antenna -->
@@ -36,38 +36,35 @@
     y1="74"
     x2="100"
     y2="56"
-    stroke="#2D3748"
-    stroke-width="6"
+    stroke="#cbd5e0"
+    stroke-width="4"
     stroke-linecap="round"
   />
   <circle
     cx="100"
     cy="50"
     r="7"
-    fill="#40E0D0"
-    stroke="#2D3748"
-    stroke-width="5"
+    fill="#e2e8f0"
+    stroke="#a0aec0"
+    stroke-width="3"
   />
 
   <!-- side pads -->
-  <rect x="46" y="92" width="14" height="28" rx="6" fill="#2D3748"/>
-  <rect x="140" y="92" width="14" height="28" rx="6" fill="#2D3748"/>
+  <rect x="46" y="92" width="14" height="28" rx="6" fill="#1a202c"/>
+  <rect x="140" y="92" width="14" height="28" rx="6" fill="#1a202c"/>
 
-  <!-- eyes -->
-  <circle cx="82" cy="102" r="14" fill="#fff"/>
-  <circle cx="88" cy="96" r="6" fill="#2D3748"/>
-  <circle cx="91" cy="93" r="2.5" fill="#fff"/>
-
-  <circle cx="118" cy="102" r="14" fill="#fff"/>
-  <circle cx="124" cy="96" r="6" fill="#2D3748"/>
-  <circle cx="127" cy="93" r="2.5" fill="#fff"/>
+  <!-- eyes: Cyan/Blue glow for AI feel -->
+  <circle cx="82" cy="102" r="14" fill="#000"/>
+  <circle cx="82" cy="102" r="11" fill="#4fd1c5" opacity="0.8"/> 
+  <circle cx="118" cy="102" r="14" fill="#000"/>
+  <circle cx="118" cy="102" r="11" fill="#4fd1c5" opacity="0.8"/>
 
   <!-- smile -->
   <path
     d="M86 120
        C92 128 108 128 114 120"
-    stroke="#2D3748"
-    stroke-width="5"
+    stroke="#e2e8f0"
+    stroke-width="4"
     stroke-linecap="round"
     fill="none"
   />
