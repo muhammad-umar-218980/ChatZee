@@ -1,48 +1,78 @@
 import express from "express";
 import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
+import { OpenRouter } from "@openrouter/sdk";
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-const API_KEY = process.env.GEMINI_API_KEY;
-
-
-const ai = new GoogleGenAI({
-  apiKey: API_KEY
+// ---------------------
+// Gemini Setup
+// ---------------------
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const geminiAI = new GoogleGenAI({
+  apiKey: GEMINI_API_KEY
 });
 
+// ---------------------
+// OpenRouter Setup
+// ---------------------
+const OPENROUTER_DEEPSEEK_KEY = process.env.OPENROUTER_DEEPSEEK_KEY;
+const openrouterAI = new OpenRouter({
+  apiKey: OPENROUTER_DEEPSEEK_KEY
+});
 
+// ---------------------
+// Routes
+// ---------------------
 app.get("/", (req, res) => {
   res.send("This is the initial backend server for ChatZee");
 });
 
-// Test chat route
+// Chat route
 app.post("/api/chat", async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, modelName } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: message
-    });
+    let reply = "";
 
-    res.json({
-      reply: response.text
-    });
+    if (!modelName || modelName === "Gemini") {
+      // Default Gemini
+      const response = await geminiAI.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: message
+      });
+      reply = response.text;
+
+    } else if (modelName === "DeepSeek") {
+      // OpenRouter Free Model
+      const response = await openrouterAI.chat.send({
+        model: "tngtech/deepseek-r1t2-chimera:free",
+        messages: [
+          { role: "user", content: message }
+        ]
+      });
+      reply = response.choices[0]?.message?.content || "No reply";
+
+    } else {
+      return res.status(400).json({ error: "Model not supported" });
+    }
+
+    res.json({ reply });
 
   } catch (error) {
-    console.error("Gemini API Error:", error);
+    console.error("AI Error:", error);
     res.status(500).json({ error: "Failed to generate AI response" });
   }
 });
 
+// ---------------------
 app.listen(5001, () => {
   console.log("Backend server running at http://localhost:5001");
 });
