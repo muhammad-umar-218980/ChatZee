@@ -25,6 +25,21 @@ const openrouterAI = new OpenRouter({
 });
 
 // ---------------------
+// Model Mapping
+// ---------------------
+const openRouterModels = {
+  DeepSeek: "tngtech/deepseek-r1t2-chimera:free",
+  Qwen3 : "qwen/qwen3-coder:free",
+  Mistral : "mistralai/devstral-2512:free",
+  Xiaomi : "xiaomi/mimo-v2-flash:free",
+  NVIDIA : "nvidia/nemotron-3-nano-30b-a3b:free",
+  kwaipilot : "kwaipilot/kat-coder-pro:free",
+  Arcee : "arcee-ai/trinity-mini:free",
+  Meta : "meta-llama/llama-3.1-405b-instruct:free",
+  Hermes : "nousresearch/hermes-3-llama-3.1-405b:free"
+};
+
+// ---------------------
 // Routes
 // ---------------------
 app.get("/", (req, res) => {
@@ -50,13 +65,11 @@ app.post("/api/chat", async (req, res) => {
       });
       reply = response.text;
 
-    } else if (modelName === "DeepSeek") {
-      // OpenRouter Free Model
+    } else if (openRouterModels[modelName]) {
+      // OpenRouter models
       const response = await openrouterAI.chat.send({
-        model: "tngtech/deepseek-r1t2-chimera:free",
-        messages: [
-          { role: "user", content: message }
-        ]
+        model: openRouterModels[modelName],
+        messages: [{ role: "user", content: message }]
       });
       reply = response.choices[0]?.message?.content || "No reply";
 
