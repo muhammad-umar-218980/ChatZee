@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Menu, Loader2, Sparkles } from "lucide-react";
-import ModelSelector from "../components/ModelSelector";
+import { Send, Plus, Loader2, Sparkles } from "lucide-react";
+import ModelDropdown from "../components/ModelDropdown";
 import MessageBubble from "../components/MessageBubble";
 
 const models = [
@@ -17,17 +17,10 @@ const models = [
 ];
 
 const ChatPage = () => {
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content:
-        "Hello! I am **ChatZee**. \n\nSelect a model and ask me anything!",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Gemini");
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const messagesEndRef = useRef(null);
 
@@ -79,121 +72,159 @@ const ChatPage = () => {
   };
 
   const handleNewChat = () => {
-    setMessages([
-      {
-        role: "assistant",
-        content:
-          "Hello! I am **ChatZee**. \n\nSelect a model and ask me anything!",
-      },
-    ]);
+    setMessages([]);
     setInput("");
     setLoading(false);
   };
 
+  const renderInputForm = (isInitial = false) => (
+    <div
+      className={`w-full max-w-3xl mx-auto relative ${
+        isInitial
+          ? "animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200"
+          : ""
+      }`}
+    >
+      <form
+        onSubmit={handleSendMessage}
+        className="relative flex flex-col bg-[#111111] border border-white/10 rounded-[28px] overflow-hidden focus-within:border-white/20 transition-all shadow-2xl"
+      >
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              handleSendMessage(e);
+            }
+          }}
+          placeholder={`Ask ${selectedModel}...`}
+          rows={1}
+          className="w-full bg-transparent text-white px-6 py-4 pb-14 focus:outline-none resize-none custom-scrollbar transition-all placeholder:text-gray-500 text-lg"
+          style={{ minHeight: "100px", maxHeight: "300px" }}
+        />
+
+        <div className="absolute bottom-3 left-3 flex items-center gap-2">
+          <ModelDropdown
+            models={models}
+            selectedModel={selectedModel}
+            onSelectModel={setSelectedModel}
+            isLocked={messages.length > 0}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={!input.trim() || loading}
+          className="absolute right-3 bottom-3 p-3 rounded-full bg-white text-black hover:bg-gray-200 disabled:bg-white/10 disabled:text-gray-500 disabled:cursor-not-allowed transition-all"
+        >
+          {loading ? (
+            <Loader2 size={24} className="animate-spin" />
+          ) : (
+            <Send size={24} />
+          )}
+        </button>
+      </form>
+    </div>
+  );
+
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden selection:bg-cyan-500 selection:text-black">
       {/* Galaxy Background Effects */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden text-white">
         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyan-900/20 blur-[120px]" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-900/20 blur-[120px]" />
         <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,#333_1px,transparent_1px),linear-gradient(to_bottom,#333_1px,transparent_1px)] bg-[size:32px_32px]" />
       </div>
 
-      {/* Sidebar */}
-      <ModelSelector
-        models={models}
-        selectedModel={selectedModel}
-        onSelectModel={setSelectedModel}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-        isLocked={messages.length > 1}
-        onNewChat={handleNewChat}
-      />
-
-      {/* Overlay for mobile sidebar */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col relative z-10 w-full">
+      <div className="flex-1 flex flex-col relative z-10 w-full overflow-hidden">
         {/* Header */}
         <header className="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-black/20 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden p-2 -ml-2 text-gray-400 hover:text-white"
-            >
-              <Menu size={20} />
-            </button>
             <div className="flex items-center gap-2">
               <Sparkles className="text-cyan-400" size={20} />
-              <h1 className="text-lg font-semibold tracking-tight">
-                ChatZee{" "}
-                <span className="text-gray-500 font-normal">
-                  / {selectedModel}
-                </span>
+              <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                ChatZee
               </h1>
             </div>
           </div>
+          <button
+            onClick={handleNewChat}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium"
+          >
+            <Plus size={16} />
+            New Chat
+          </button>
         </header>
 
-        {/* Messages List */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth custom-scrollbar">
-          <div className="max-w-3xl mx-auto space-y-6">
-            {messages.map((msg, idx) => (
-              <MessageBubble key={idx} message={msg} />
-            ))}
-            {loading && (
-              <div className="flex justify-start animate-pulse">
-                <div className="bg-white/5 px-4 py-3 rounded-2xl rounded-bl-none flex items-center gap-2">
-                  <Loader2 className="animate-spin text-cyan-400" size={16} />
-                  <span className="text-sm text-gray-400">Thinking...</span>
+        {/* Messages or Welcome Section */}
+        <div
+          className={`flex-1 overflow-y-auto px-4 scroll-smooth custom-scrollbar mt-2 ${
+            messages.length === 0 ? "flex items-center justify-center" : "py-6"
+          }`}
+        >
+          <div
+            className={`w-full max-w-3xl mx-auto ${
+              messages.length === 0
+                ? "flex flex-col items-center justify-center -mt-20"
+                : "space-y-6"
+            }`}
+          >
+            {messages.length === 0 ? (
+              <div className="w-full text-center">
+                <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                  <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                    Hello, I'm ChatZee
+                  </h2>
+                  <p className="text-xl text-gray-400 mb-8">
+                    How can I help you today?
+                  </p>
+                  {renderInputForm(true)}
                 </div>
               </div>
+            ) : (
+              <>
+                {messages.map((msg, idx) => (
+                  <MessageBubble key={idx} message={msg} />
+                ))}
+                {loading && (
+                  <div className="flex justify-start animate-pulse">
+                    <div className="bg-white/5 px-4 py-3 rounded-2xl rounded-bl-none flex items-center gap-2">
+                      <Loader2
+                        className="animate-spin text-cyan-400"
+                        size={16}
+                      />
+                      <span className="text-sm text-gray-400">Thinking...</span>
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </>
             )}
-            <div ref={messagesEndRef} />
           </div>
         </div>
 
-        {/* Input Area */}
-        <div className="p-4 border-t border-white/5 bg-black/40 backdrop-blur-lg">
-          <form
-            onSubmit={handleSendMessage}
-            className="max-w-3xl mx-auto relative flex items-end gap-2"
-          >
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSendMessage(e);
-                }
-              }}
-              placeholder={`Message ${selectedModel}...`}
-              rows={1}
-              className="w-full bg-white/5 border border-white/10 text-white rounded-xl px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 resize-none custom-scrollbar transition-all placeholder:text-gray-500"
-              style={{ minHeight: "50px", maxHeight: "200px" }}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || loading}
-              className="absolute right-2 bottom-2 p-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_rgba(6,182,212,0.4)]"
-            >
-              {loading ? (
-                <Loader2 size={20} className="animate-spin" />
-              ) : (
-                <Send size={20} />
-              )}
-            </button>
-          </form>
-          <p className="text-center text-xs text-gray-600 mt-2">
-            AI can make mistakes. Please verify important information.
-          </p>
+        {/* Input Area (Bottom) or Disclaimer */}
+        <div
+          className={`p-4 transition-all duration-500 ${
+            messages.length === 0
+              ? "pb-8"
+              : "border-t border-white/5 bg-black/40 backdrop-blur-lg"
+          }`}
+        >
+          {messages.length > 0 ? (
+            renderInputForm()
+          ) : (
+            <p className="text-center text-xs text-gray-600">
+              ChatZee can make mistakes. Consider checking important info.
+            </p>
+          )}
+          {messages.length > 0 && (
+            <p className="text-center text-xs text-gray-600 mt-4">
+              ChatZee can make mistakes. Consider checking important info.
+            </p>
+          )}
         </div>
       </div>
     </div>
