@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Plus, Loader2, Sparkles } from "lucide-react";
+import { Send, Plus, Loader2, Sparkles, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ModelIcon from "../components/ModelIcon";
 import MessageBubble from "../components/MessageBubble";
 
@@ -17,6 +18,7 @@ const models = [
 ];
 
 const ChatPage = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -131,7 +133,7 @@ const ChatPage = () => {
   );
 
   return (
-    <div className="flex h-screen bg-black text-white overflow-hidden selection:bg-cyan-500 selection:text-black">
+    <div className="flex h-screen w-full bg-black text-white overflow-hidden selection:bg-cyan-500 selection:text-black">
       {/* Galaxy Background Effects */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden text-white">
         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyan-900/20 blur-[120px]" />
@@ -142,15 +144,31 @@ const ChatPage = () => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative z-10 w-full overflow-hidden">
         {/* Header */}
-        <header className="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-black/20 backdrop-blur-md">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="text-cyan-400" size={20} />
-              <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                ChatZee
-              </h1>
-            </div>
+        <header className="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-black/20 backdrop-blur-md relative">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/")}
+              className="group flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium text-gray-400 hover:text-white"
+            >
+              <ArrowLeft
+                size={16}
+                className="transition-transform group-hover:-translate-x-1"
+              />
+              <span>Back to Home</span>
+            </button>
           </div>
+
+          {/* Centered Brand */}
+          <div
+            className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2 cursor-pointer"
+            onClick={() => navigate("/")}
+          >
+            <img src="/ChatZee.svg" alt="ChatZee" className="w-7 h-7" />
+            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+              ChatZee
+            </h1>
+          </div>
+
           <button
             onClick={handleNewChat}
             className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all text-sm font-medium"
@@ -167,7 +185,7 @@ const ChatPage = () => {
           }`}
         >
           <div
-            className={`w-full max-w-3xl mx-auto ${
+            className={`w-full max-w-3xl mx-auto mt-10 ${
               messages.length === 0
                 ? "flex flex-col items-center justify-center -mt-20"
                 : "space-y-6"
