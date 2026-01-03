@@ -78,6 +78,18 @@ const ChatPage = () => {
     }
   };
 
+  const handleNewChat = () => {
+    setMessages([
+      {
+        role: "assistant",
+        content:
+          "Hello! I am **ChatZee**. \n\nSelect a model and ask me anything!",
+      },
+    ]);
+    setInput("");
+    setLoading(false);
+  };
+
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden selection:bg-cyan-500 selection:text-black">
       {/* Galaxy Background Effects */}
@@ -94,6 +106,8 @@ const ChatPage = () => {
         onSelectModel={setSelectedModel}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
+        isLocked={messages.length > 1}
+        onNewChat={handleNewChat}
       />
 
       {/* Overlay for mobile sidebar */}

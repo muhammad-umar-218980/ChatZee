@@ -1,4 +1,4 @@
-import { Bot } from "lucide-react";
+import { Bot, Plus } from "lucide-react";
 
 const ModelSelector = ({
   selectedModel,
@@ -6,6 +6,8 @@ const ModelSelector = ({
   models,
   isOpen,
   onClose,
+  isLocked,
+  onNewChat,
 }) => {
   const getIcon = (name) => {
     const iconProps = { className: "w-5 h-5 object-contain" };
@@ -53,19 +55,36 @@ const ModelSelector = ({
       </div>
 
       <div className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-4rem)] custom-scrollbar">
-        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">
+        {/* New Chat Button */}
+        <button
+          onClick={onNewChat}
+          className="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 bg-cyan-600/10 border border-cyan-500/20 text-cyan-400 hover:bg-cyan-600/20 transition-all duration-200 mb-4 group"
+        >
+          <Plus
+            size={18}
+            className="group-hover:scale-110 transition-transform"
+          />
+          <span className="font-semibold">New Chat</span>
+        </button>
+
+        <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-2">
           Available LLMs
         </div>
+
         {models.map((model) => (
           <button
             key={model}
             onClick={() => {
+              if (isLocked) return;
               onSelectModel(model);
               if (window.innerWidth < 1024) onClose();
             }}
+            disabled={isLocked && selectedModel !== model}
             className={`w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all duration-200 border ${
               selectedModel === model
                 ? "bg-cyan-500/10 border-cyan-500/50 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.15)]"
+                : isLocked
+                ? "bg-transparent border-transparent text-gray-600 cursor-not-allowed opacity-50"
                 : "bg-transparent border-transparent text-gray-400 hover:bg-white/5 hover:text-gray-200"
             }`}
           >
