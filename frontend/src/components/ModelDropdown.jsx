@@ -78,7 +78,7 @@ const ModelDropdown = ({ models, selectedModel, onSelectModel, isLocked }) => {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full mb-3 left-0 w-64 max-h-[400px] overflow-hidden bg-[#161616]/95 backdrop-blur-xl border border-white/10 rounded-[20px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 animate-in fade-in zoom-in-95 duration-200">
+        <div className="absolute top-full mt-2 left-0 w-64 max-h-[400px] overflow-hidden bg-[#161616]/95 backdrop-blur-xl border border-white/10 rounded-[20px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-50 animate-in fade-in zoom-in-95 duration-200">
           <div className="p-2 overflow-y-auto max-h-[380px] custom-scrollbar">
             <div className="px-3 py-2 text-[10px] font-bold text-gray-500 uppercase tracking-[0.1em] border-b border-white/5 mb-1">
               Select Logic Model

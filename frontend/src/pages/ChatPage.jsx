@@ -87,7 +87,7 @@ const ChatPage = () => {
     >
       <form
         onSubmit={handleSendMessage}
-        className="relative flex flex-col bg-[#111111] border border-white/10 rounded-[28px] overflow-hidden focus-within:border-white/20 transition-all shadow-2xl"
+        className="relative flex flex-col bg-[#111111] border border-white/10 rounded-[28px] focus-within:border-white/20 transition-all shadow-2xl"
       >
         <textarea
           value={input}
@@ -98,10 +98,10 @@ const ChatPage = () => {
               handleSendMessage(e);
             }
           }}
-          placeholder={`Ask ${selectedModel}...`}
+          placeholder={`Ask ChatZee ...`}
           rows={1}
-          className="w-full bg-transparent text-white px-6 py-4 pb-14 focus:outline-none resize-none custom-scrollbar transition-all placeholder:text-gray-500 text-lg"
-          style={{ minHeight: "100px", maxHeight: "300px" }}
+          className="w-full bg-transparent text-white px-6 pt-4 pb-16 focus:outline-none resize-none custom-scrollbar transition-all placeholder:text-gray-500 text-lg"
+          style={{ minHeight: "120px", maxHeight: "300px" }}
         />
 
         <div className="absolute bottom-3 left-3 flex items-center gap-2">
