@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Plus, Loader2, Sparkles } from "lucide-react";
-import ModelDropdown from "../components/ModelDropdown";
+import ModelIcon from "../components/ModelIcon";
 import MessageBubble from "../components/MessageBubble";
 
 const models = [
@@ -105,12 +105,14 @@ const ChatPage = () => {
         />
 
         <div className="absolute bottom-3 left-3 flex items-center gap-2">
-          <ModelDropdown
-            models={models}
-            selectedModel={selectedModel}
-            onSelectModel={setSelectedModel}
-            isLocked={messages.length > 0}
-          />
+          <div className="flex items-center gap-2.5 px-3 py-2 rounded-2xl bg-white/5 border border-white/5 opacity-80 shadow-lg">
+            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-black/20 overflow-hidden">
+              <ModelIcon name={selectedModel} className="w-4 h-4" />
+            </div>
+            <span className="text-sm font-semibold tracking-wide text-gray-200">
+              {selectedModel}
+            </span>
+          </div>
         </div>
 
         <button
@@ -180,6 +182,39 @@ const ChatPage = () => {
                   <p className="text-xl text-gray-400 mb-8">
                     How can I help you today?
                   </p>
+
+                  {/* Model Badges Grid */}
+                  <div className="flex flex-col gap-3 mb-10 items-center">
+                    {[0, 1].map((row) => (
+                      <div
+                        key={row}
+                        className="flex flex-wrap justify-center gap-2"
+                      >
+                        {models.slice(row * 5, (row + 1) * 5).map((model) => (
+                          <button
+                            key={model}
+                            onClick={() => setSelectedModel(model)}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300 ${
+                              selectedModel === model
+                                ? "bg-cyan-500/10 border-cyan-500/50 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.2)]"
+                                : "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10 hover:border-white/20"
+                            }`}
+                          >
+                            <div className="w-5 h-5 flex items-center justify-center">
+                              <ModelIcon
+                                name={model}
+                                className="w-full h-full"
+                              />
+                            </div>
+                            <span className="text-xs font-semibold">
+                              {model}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+
                   {renderInputForm(true)}
                 </div>
               </div>
