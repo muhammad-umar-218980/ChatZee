@@ -1,4 +1,4 @@
-import { Bot, Sparkles, Zap, Cpu, Brain, Flame, Box } from "lucide-react";
+import { Bot } from "lucide-react";
 
 const ModelSelector = ({
   selectedModel,
@@ -8,13 +8,28 @@ const ModelSelector = ({
   onClose,
 }) => {
   const getIcon = (name) => {
-    if (name.includes("Gemini")) return <Sparkles size={18} />;
-    if (name.includes("DeepSeek")) return <Brain size={18} />;
+    const iconProps = { className: "w-5 h-5 object-contain" };
+    if (name.includes("Gemini"))
+      return <img src="/Gemini.svg" alt="Gemini" {...iconProps} />;
+    if (name.includes("DeepSeek"))
+      return <img src="/Deepseek.svg" alt="DeepSeek" {...iconProps} />;
     if (name.includes("Meta") || name.includes("Llama"))
-      return <Zap size={18} />;
-    if (name.includes("NVIDIA")) return <Cpu size={18} />;
-    if (name.includes("Mistral")) return <Flame size={18} />;
-    return <Box size={18} />;
+      return <img src="/Meta.svg" alt="Meta" {...iconProps} />;
+    if (name.includes("NVIDIA") || name.includes("Nemotron"))
+      return <img src="/Nvidia.svg" alt="NVIDIA" {...iconProps} />;
+    if (name.includes("Mistral") || name.includes("Mixtral"))
+      return <img src="/Mistral.svg" alt="Mistral" {...iconProps} />;
+    if (name.includes("Qwen"))
+      return <img src="/Qwen.svg" alt="Qwen" {...iconProps} />;
+    if (name.includes("Xiaomi"))
+      return <img src="/Xiaomi.svg" alt="Xiaomi" {...iconProps} />;
+    if (name.includes("Hermes"))
+      return <img src="/Hermes.svg" alt="Hermes" {...iconProps} />;
+    if (name.includes("Kwai") || name.toLowerCase().includes("kwai"))
+      return <img src="/KwaiPilot.svg" alt="Kwai" {...iconProps} />;
+    if (name.includes("Arcee"))
+      return <img src="/Arcee.svg" alt="Arcee" {...iconProps} />;
+    return <Bot size={18} />;
   };
 
   return (
@@ -37,7 +52,6 @@ const ModelSelector = ({
         </button>
       </div>
 
-      
       <div className="p-4 space-y-2 overflow-y-auto h-[calc(100vh-4rem)] custom-scrollbar">
         <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-2">
           Available LLMs
