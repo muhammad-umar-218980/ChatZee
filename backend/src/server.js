@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import chatRoutes from "./routes/chatRoutes.js";
 import cors from "cors";
+import connectDB from "./config/db.js";
 
 dotenv.config();
+
 
 const app = express();
 app.use(cors());
@@ -17,6 +19,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/chat", chatRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Backend server running at http://localhost:${PORT}`);
-});
+connectDB().then(()=>{
+  app.listen(PORT, () => {
+    console.log(`Backend server running at http://localhost:${PORT}`);
+  });
+})
