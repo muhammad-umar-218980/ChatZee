@@ -10,7 +10,7 @@ const ModelIcon = ({ name, className = "w-5 h-5" }) => {
   if (name.includes("DeepSeek"))
     return <img src="/Deepseek.svg" alt="DeepSeek" {...iconProps} />;
   if (name.includes("Meta") || name.includes("Llama"))
-    return <img src="/Meta.svg" alt="Meta" {...iconProps} />;
+    return <img src="/MetaAi.svg" alt="Meta" {...iconProps} />;
   if (name.includes("NVIDIA") || name.includes("Nemotron"))
     return <img src="/Nvidia.svg" alt="NVIDIA" {...iconProps} />;
   if (name.includes("Mistral") || name.includes("Mixtral"))

@@ -3,6 +3,7 @@ import { Send, Plus, Loader2, Sparkles, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import ModelIcon from "../components/ModelIcon";
 import MessageBubble from "../components/MessageBubble";
+import { AI_CONTEXT } from "../constants/aiContext";
 
 const models = [
   "Gemini",
@@ -48,7 +49,7 @@ const ChatPage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: userMessage.content,
+          message: `${AI_CONTEXT}\n\nUser Message: ${userMessage.content}`,
           modelName: selectedModel,
         }),
       });
