@@ -2,7 +2,7 @@
 
 ChatZee is a powerful, modern MERN-stack chatbot implementation featuring a galaxy-themed UI and multi-model AI capabilities. Built for speed and elegance, ChatZee allows users to interact with various high-quality Large Language Models (LLMs) seamlessly.
 
-![ChatZee Logo](frontend/public/ChatZee.svg)
+<img src="frontend/public/ChatZee.svg" alt="ChatZee Logo" width="120" />
 
 ## ✨ Features
 
@@ -99,4 +99,3 @@ ChatZee/
 **Muhammad Umar**
 
 - GitHub: [@muhammad-umar-218980](https://github.com/muhammad-umar-218980)
-
