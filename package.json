@@ -4,13 +4,11 @@
   "description": "A simple MERN Stack Chatbot",
   "main": "server.js",
   "scripts": {
-    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend ",
-    "start" : "npm run start --prefix backend"
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19.0"
   }
 }
