@@ -39,14 +39,8 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (!id) {
-      const savedSessionId = localStorage.getItem("lastChatSessionId");
-      if (savedSessionId) {
-        navigate(`/chat/${savedSessionId}`, { replace: true });
-      } else {
-        const newSessionId = uuidv4();
-        localStorage.setItem("lastChatSessionId", newSessionId);
-        navigate(`/chat/${newSessionId}`, { replace: true });
-      }
+      setMessages([]);
+      setSelectedModel("Gemini");
     } else {
       localStorage.setItem("lastChatSessionId", id);
       fetchChatHistory(id);
@@ -78,7 +72,13 @@ const ChatPage = () => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim() || loading || !id) return;
+    if (!input.trim() || loading) return;
+
+    let currentId = id;
+    if (!currentId) {
+      currentId = uuidv4();
+      localStorage.setItem("lastChatSessionId", currentId);
+    }
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -86,22 +86,28 @@ const ChatPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:5001/api/chat/${id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: userMessage.content,
-          context: AI_CONTEXT,
-          modelName: selectedModel,
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:5001/api/chat/${currentId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: userMessage.content,
+            context: AI_CONTEXT,
+            modelName: selectedModel,
+          }),
+        }
+      );
 
       const data = await response.json();
-
       if (data.error) throw new Error(data.error);
 
       const assistantMessage = { role: "assistant", content: data.reply };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      if (!id) {
+        navigate(`/chat/${currentId}`, { replace: true });
+      }
     } catch (error) {
       setMessages((prev) => [
         ...prev,
