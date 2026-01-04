@@ -27,3 +27,21 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+.prose pre {
+  @apply bg-black/40 border border-white/10 rounded-xl overflow-x-auto selection:bg-cyan-500/20;
+}
+
+.prose code {
+  @apply text-cyan-400 font-medium;
+}
+
+.prose pre code {
+  @apply text-gray-200 font-normal;
+}
+
+/* Ensure long words and URLs don't break the layout */
+.break-words {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

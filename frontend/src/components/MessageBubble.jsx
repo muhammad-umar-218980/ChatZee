@@ -10,7 +10,7 @@ const MessageBubble = ({ message }) => {
       } mb-4 animate-fade-in`}
     >
       <div
-        className={`max-w-[85%] sm:max-w-[75%] px-5 py-3.5 rounded-2xl backdrop-blur-md shadow-lg transition-all duration-300 ${
+        className={`max-w-[85%] sm:max-w-[75%] px-5 py-3.5 rounded-2xl backdrop-blur-md shadow-lg transition-all duration-300 overflow-hidden ${
           isUser
             ? "bg-gradient-to-br from-cyan-600 to-blue-700 text-white rounded-br-none border border-cyan-500/30"
             : "bg-white/5 text-gray-100 rounded-bl-none border border-white/10 hover:bg-white/10"
