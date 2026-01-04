@@ -24,6 +24,7 @@ const ChatPage = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Gemini");
+  const [lastPrompts, setLastPrompts] = useState([]);
 
   const messagesEndRef = useRef(null);
 
@@ -45,11 +46,19 @@ const ChatPage = () => {
     setLoading(true);
 
     try {
+      const promptHistory = lastPrompts
+        .map((p, i) => `Previous Prompt ${i + 1}: ${p}`)
+        .join("\n");
+
       const response = await fetch("http://localhost:5001/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: `${AI_CONTEXT}\n\nUser Message: ${userMessage.content}`,
+          message: `${AI_CONTEXT}\n\n${
+            promptHistory
+              ? `Recent Conversation Context:\n${promptHistory}\n\n`
+              : ""
+          }Current User Message: ${userMessage.content}`,
           modelName: selectedModel,
         }),
       });
@@ -57,6 +66,8 @@ const ChatPage = () => {
       const data = await response.json();
 
       if (data.error) throw new Error(data.error);
+
+      setLastPrompts((prev) => [...prev, userMessage.content].slice(-2));
 
       const assistantMessage = { role: "assistant", content: data.reply };
       setMessages((prev) => [...prev, assistantMessage]);
@@ -78,6 +89,7 @@ const ChatPage = () => {
     setMessages([]);
     setInput("");
     setLoading(false);
+    setLastPrompts([]);
   };
 
   const renderInputForm = (isInitial = false) => (
