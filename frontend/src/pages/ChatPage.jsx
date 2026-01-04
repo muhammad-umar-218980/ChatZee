@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Send, Plus, Loader2, Sparkles, ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import ModelIcon from "../components/ModelIcon";
 import MessageBubble from "../components/MessageBubble";
 import { AI_CONTEXT } from "../constants/aiContext";
@@ -19,12 +20,12 @@ const models = [
 ];
 
 const ChatPage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState("Gemini");
-  const [lastPrompts, setLastPrompts] = useState([]);
 
   const messagesEndRef = useRef(null);
 
@@ -36,9 +37,48 @@ const ChatPage = () => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    if (!id) {
+      const savedSessionId = localStorage.getItem("lastChatSessionId");
+      if (savedSessionId) {
+        navigate(`/chat/${savedSessionId}`, { replace: true });
+      } else {
+        const newSessionId = uuidv4();
+        localStorage.setItem("lastChatSessionId", newSessionId);
+        navigate(`/chat/${newSessionId}`, { replace: true });
+      }
+    } else {
+      localStorage.setItem("lastChatSessionId", id);
+      fetchChatHistory(id);
+    }
+  }, [id]);
+
+  const fetchChatHistory = async (sessionId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5001/api/chat/${sessionId}`
+      );
+      const data = await response.json();
+      if (data.messages) {
+        if (data.modelName) {
+          setSelectedModel(data.modelName);
+        }
+        const cleanedMessages = data.messages.map((msg) => ({
+          ...msg,
+          content: msg.content.includes("Current User Message:")
+            ? msg.content.split("Current User Message:")[1].trim()
+            : msg.content,
+        }));
+        setMessages(cleanedMessages);
+      }
+    } catch (error) {
+      console.error("Fetch History Error:", error);
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || !id) return;
 
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
@@ -46,19 +86,12 @@ const ChatPage = () => {
     setLoading(true);
 
     try {
-      const promptHistory = lastPrompts
-        .map((p, i) => `Previous Prompt ${i + 1}: ${p}`)
-        .join("\n");
-
-      const response = await fetch("http://localhost:5001/api/chat", {
+      const response = await fetch(`http://localhost:5001/api/chat/${id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: `${AI_CONTEXT}\n\n${
-            promptHistory
-              ? `Recent Conversation Context:\n${promptHistory}\n\n`
-              : ""
-          }Current User Message: ${userMessage.content}`,
+          message: userMessage.content,
+          context: AI_CONTEXT,
           modelName: selectedModel,
         }),
       });
@@ -66,8 +99,6 @@ const ChatPage = () => {
       const data = await response.json();
 
       if (data.error) throw new Error(data.error);
-
-      setLastPrompts((prev) => [...prev, userMessage.content].slice(-2));
 
       const assistantMessage = { role: "assistant", content: data.reply };
       setMessages((prev) => [...prev, assistantMessage]);
@@ -86,10 +117,12 @@ const ChatPage = () => {
   };
 
   const handleNewChat = () => {
+    const newSessionId = uuidv4();
+    localStorage.setItem("lastChatSessionId", newSessionId);
     setMessages([]);
     setInput("");
     setLoading(false);
-    setLastPrompts([]);
+    navigate(`/chat/${newSessionId}`);
   };
 
   const renderInputForm = (isInitial = false) => (

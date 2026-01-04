@@ -1,4 +1,4 @@
-import {Route , Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ChatPage from "./pages/ChatPage";
 
@@ -7,10 +7,11 @@ const App = () => {
     <div>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/chat/:id" element={<ChatPage />} />
         <Route path="/chat" element={<ChatPage />} />
       </Routes>
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
