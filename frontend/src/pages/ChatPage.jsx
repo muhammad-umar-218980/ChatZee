@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Plus, Loader2, Sparkles, ArrowLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import api from "../lib/axios";
 import ModelIcon from "../components/ModelIcon";
 import MessageBubble from "../components/MessageBubble";
 import { AI_CONTEXT } from "../constants/aiContext";
@@ -49,10 +50,8 @@ const ChatPage = () => {
 
   const fetchChatHistory = async (sessionId) => {
     try {
-      const response = await fetch(
-        `http://localhost:5001/api/chat/${sessionId}`
-      );
-      const data = await response.json();
+      const response = await api.get(`/chat/${sessionId}`);
+      const data = response.data;
       if (data.messages) {
         if (data.modelName) {
           setSelectedModel(data.modelName);
@@ -86,20 +85,13 @@ const ChatPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        `http://localhost:5001/api/chat/${currentId}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: userMessage.content,
-            context: AI_CONTEXT,
-            modelName: selectedModel,
-          }),
-        }
-      );
+      const response = await api.post(`/chat/${currentId}`, {
+        message: userMessage.content,
+        context: AI_CONTEXT,
+        modelName: selectedModel,
+      });
 
-      const data = await response.json();
+      const data = response.data;
       if (data.error) throw new Error(data.error);
 
       const assistantMessage = { role: "assistant", content: data.reply };
